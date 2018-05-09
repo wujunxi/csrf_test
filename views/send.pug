@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        title Document
+    body
+        form(action="/process", method="post")
+            input(type="hidden",name="_csrf",value=csrfToken)
+            button(type="submit") Submit
+        script(src="/lib/jquery.min.js")
+        script(src="/lib/jquery.cookie.js")
+        script.
+            $(function(){
+                var csrf_token = $.cookie('csrf_token');
+                $.ajaxSetup({
+                    beforeSend:function(xhr){
+                        //- this; // 调用本次AJAX请求时传递的options参数
+                        if(this.type.toLowerCase() == 'post'){
+                            xhr.setRequestHeader('x-csrf-token', csrf_token);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url:'/process_ajax',
+                    data:{name:'Jack'},
+                    dataType:'json',
+                    type:'get',
+                    success:function(result){
+                        alert('get'+JSON.stringify(result));
+                    },
+                    error:function(){
+                        alert('fail');
+                    }
+                });
+
+                $.ajax({
+                    url:'/process_ajax',
+                    data:{name:'Jack'},
+                    dataType:'json',
+                    type:'POST',
+                    success:function(result){
+                        alert('post'+JSON.stringify(result));
+                    },
+                    error:function(){
+                        alert('fail');
+                    }
+                });
+            });
